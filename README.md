@@ -6,12 +6,7 @@ A command line interface for reading passwords from [1Password](https://agilebit
 
 This project was highly influenced by George Brock's [1pass](https://github.com/georgebrock/1pass)
 
-
-# Install It
-
-```
-$ pip install kees
-```
+_It's written in Python 3 too, in case that's something you care about_
 
 
 # Using it
@@ -36,4 +31,30 @@ Kees assumes the keychain is stored at `~/Dropbox/1Password.agilekeychain`, _unl
 ```
 $ kees --path ~/whatever/1Password.agilekeychain gmail
 ...
+```
+
+
+# Install It
+
+Go get it
+
+```
+$ cd $SOMEWHERE
+$ git clone https://github.com/jmsdnns/kees
+```
+
+Then install it
+
+```
+$ cd kees
+$ pipenv install .
+```
+
+And then make it a command by putting this in your shell.
+
+```
+$ alias kees="PIPENV_PIPFILE=$SOMEWHERE/kees/Pipfile pipenv run kees"
+$ kees "soundcloud"
+Password:
+
 ```
