@@ -1,7 +1,9 @@
 ## Kees
-export ONEPASSWORD_KEYCHAIN=$HOME/Dropbox/jmsdnns/1Password.agilekeychain
+export ONEPASSWORD_KEYCHAIN=$HOME/1Password.agilekeychain
 export KEES_TIMER_DURATION=15
 export KEES_TOMBSTONE=$TMPDIR/kees
+export KEES_TREE=$HOME/Projects/kees
+
 
 function _kees_clean() {
     KEES_TIMER=$KEES_TIMER_DURATION
@@ -41,7 +43,7 @@ function _kees_copy() {
 }
 
 function _kees_root() {
-    command pushd "$HOME/Projects/kees" > /dev/null
+    command pushd $KEES_TREE > /dev/null
     KEES_VENV=$(pipenv --venv)
     command popd > /dev/null
     echo "$KEES_VENV"
