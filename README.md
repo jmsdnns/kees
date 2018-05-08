@@ -9,31 +9,6 @@ This project was highly influenced by George Brock's [1pass](https://github.com/
 _It's written in Python 3 too, in case that's something you care about_
 
 
-# Using it
-
-Get some password out of your vault like this
-
-```
-$ kees gmail
-Password:
-y0uRp@ssw0rd
-```
-
-Put your password in your copy buffer
-
-```
-$ kees soundcloud | xclip -i selection clip_board
-$
-```
-
-Kees assumes the keychain is stored at `~/Dropbox/1Password.agilekeychain`, _unless_ you tell it otherwise with the `--path` flag.
-
-```
-$ kees --path ~/whatever/1Password.agilekeychain gmail
-...
-```
-
-
 # Install It
 
 Go get it
@@ -51,3 +26,26 @@ $ pipenv install .
 ```
 
 And then make it a command by editing kees.sh and copying it to your shell.
+
+
+# Using it
+
+Get some password out of your vault like this
+
+```
+$ kees gmail
+Password:
+y0uRp@ssw0rd
+```
+
+Put your password in your copy buffer. _Note: kees will overwrite your copy buffer after 15 seconds_
+
+```
+$ kees soundcloud
+```
+
+Kees assumes the keychain is stored at `~/Dropbox/1Password.agilekeychain`, _unless_ you tell it otherwise with the `--path` flag.
+
+```
+$ kees --path ~/whatever/1Password.agilekeychain gmail
+```
