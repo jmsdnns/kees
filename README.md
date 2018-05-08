@@ -50,11 +50,4 @@ $ cd kees
 $ pipenv install .
 ```
 
-And then make it a command by putting this in your shell.
-
-```
-$ alias kees="PIPENV_PIPFILE=$SOMEWHERE/kees/Pipfile pipenv run kees"
-$ kees "soundcloud"
-Password:
-
-```
+And then make it a command by editing kees.sh and copying it to your shell.
