@@ -4,7 +4,6 @@ export KEES_TIMER_DURATION=15
 export KEES_TOMBSTONE=$TMPDIR/kees
 export KEES_TREE=$HOME/Projects/kees
 
-
 function _kees_clean() {
     KEES_TIMER=$KEES_TIMER_DURATION
 
@@ -12,14 +11,14 @@ function _kees_clean() {
         touch $KEES_TOMBSTONE
     else
         touch $KEES_TOMBSTONE
-    TMPAGE=0
+        TMPAGE=0
 
-    while [ "$TMPAGE" -lt "$KEES_TIMER_DURATION" ]; do
-        TMPAGE=$(_kees_tmp_age)
-        echo $BASHPID     $KEES_TIMER >> word
-        echo "  -$TMPAGE" >> word
-        sleep 1
-    done
+        while [ "$TMPAGE" -lt "$KEES_TIMER_DURATION" ]; do
+            TMPAGE=$(_kees_tmp_age)
+            echo $BASHPID     $KEES_TIMER >> word
+            echo "  -$TMPAGE" >> word
+            sleep 1
+        done
 
         _kees_copy_command "gimme the kees!"
     fi
@@ -31,7 +30,6 @@ function _kees_tmp_age() {
     AGE=$((NOW - CHANGED))
     echo $AGE
 }
-
 
 function _kees_copy_command() {
     echo "$1" | xclip -selection clip_board
@@ -52,10 +50,18 @@ function _kees_root() {
 function kees() {
     KEES_ROOT=$(_kees_root)
     if [ -z $KEES_ROOT ]; then
-    echo "Kees root not found. Is it installed?"
+        echo "Kees root not found. Is it installed?"
     fi
 
     KEES_BIN=$KEES_ROOT/bin/kees
-    PASSWORD=$($KEES_BIN "$@")
-    _kees_copy $PASSWORD
+    OUTPUT=$($KEES_BIN "$@")
+
+    # multiple lines of output means kees didnt find match
+    # and wants to say why
+    LINES=$(wc -l <<< $OUTPUT)
+    if [ "$LINES" -gt "1" ]; then
+        echo "$OUTPUT"
+    else
+        _kees_copy $OUTPUT
+    fi
 }
