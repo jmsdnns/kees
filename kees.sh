@@ -41,10 +41,7 @@ function _kees_copy() {
 }
 
 function _kees_root() {
-    command pushd $KEES_TREE > /dev/null
-    KEES_VENV=$(pipenv --venv)
-    command popd > /dev/null
-    echo "$KEES_VENV"
+    echo "$WORKON_HOME/kees"
 }
 
 function kees() {
