@@ -2,7 +2,6 @@
 export ONEPASSWORD_KEYCHAIN=$HOME/1Password.agilekeychain
 export KEES_TIMER_DURATION=15
 export KEES_TOMBSTONE=$TMPDIR/kees
-export KEES_TREE=$HOME/Projects/kees
 
 function _kees_clean() {
     KEES_TIMER=$KEES_TIMER_DURATION
@@ -15,8 +14,6 @@ function _kees_clean() {
 
         while [ "$TMPAGE" -lt "$KEES_TIMER_DURATION" ]; do
             TMPAGE=$(_kees_tmp_age)
-            echo $BASHPID     $KEES_TIMER >> word
-            echo "  -$TMPAGE" >> word
             sleep 1
         done
 
