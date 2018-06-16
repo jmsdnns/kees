@@ -2,14 +2,34 @@
 
 A command line interface for reading passwords from [1Password](https://agilebits.com/onepassword) vaults.
 
-[Agile Bits](https://agilebits.com) does not officially support Linux. This lack of agility bites, so I built a vault _reader_, but cannot build a vault _writer_.
+[Agile Bits](https://agilebits.com) does not officially support Linux. This lack of agility bites, so I built a vault _reader_, but cannot build a vault _writer_. Fortunately, I use my phone for creating accounts so I only need read support on Linux.
 
-This project was highly influenced by George Brock's [1pass](https://github.com/georgebrock/1pass)
-
-_It's written in Python 3 too, in case that's something you care about_
+_This project was influenced by George Brock's [1pass](https://github.com/georgebrock/1pass)_
 
 
-# Install It
+## Using it
+
+Get the password for one of your accounts like this: `kees <account name>`.
+
+```
+$ kees gmail
+```
+
+You now have 15 seconds to enter your password before a background process cleans your pastebuffer. This reduces the chance an attackers can retrieve your password from your pastebuffer.
+
+If multiple possible matches are found, kees will list them.
+
+```
+$ kees "soundcloud - foo"
+Password: 
+Possible matches:
+- Soundcloud - jmsdnns
+- Soundcloud - american food
+- Soundcloud - locke
+```
+
+
+## Install It
 
 Go get it
 
@@ -22,29 +42,27 @@ Then install it
 
 ```
 $ cd kees
-$ pipenv install .
+$ pip install .
 ```
 
 And then make it a command by editing kees.sh and copying it to your shell.
 
 
-# Using it
+## Vault Path
 
-Get some password out of your vault like this
+Kees assumes the keychain is stored at `~/1Password.agilekeychain`, _unless_ you tell it otherwise.
 
-```
-$ kees gmail
-Password:
-y0uRp@ssw0rd
-```
+### Using kees.sh
 
-Put your password in your copy buffer. _Note: kees will overwrite your copy buffer after 15 seconds_
+Add this line after `kees.sh` is sourced
 
 ```
-$ kees soundcloud
+export ONEPASSWORD_KEYCHAIN=/path/to/your/keychain
 ```
 
-Kees assumes the keychain is stored at `~/Dropbox/1Password.agilekeychain`, _unless_ you tell it otherwise with the `--path` flag.
+### Python flag
+
+The Python code accepts a `--path` flag.
 
 ```
 $ kees --path ~/whatever/1Password.agilekeychain gmail
