@@ -6,17 +6,28 @@ export KEES_TOMBSTONE=$TMPDIR/kees
 function _kees_clean() {
     KEES_TIMER=$KEES_TIMER_DURATION
 
+    # Clean up old tombstones
+    if [ -e "$KEES_TOMBSTONE" ]; then
+        TMPAGE=$(_kees_tmp_age)
+        if [ "$TMPAGE" -gt "$KEES_TIMER_DURATION" ]; then
+            rm -f $KEES_TOMBSTONE
+        fi
+    fi
+
+    # If tombstone still exists, extend life of tombstone
     if [ -e "$KEES_TOMBSTONE" ]; then
         touch $KEES_TOMBSTONE
+    # If tombstone didn't exist, create it and begin cleanup timer
     else
         touch $KEES_TOMBSTONE
-        TMPAGE=0
 
+        TMPAGE=0
         while [ "$TMPAGE" -lt "$KEES_TIMER_DURATION" ]; do
             TMPAGE=$(_kees_tmp_age)
             sleep 1
         done
 
+        rm -f $KEES_TOMBSTONE
         _kees_copy_command "gimme the kees!"
     fi
 }
@@ -50,12 +61,11 @@ function kees() {
     KEES_BIN=$KEES_ROOT/bin/kees
     OUTPUT=$($KEES_BIN "$@")
 
-    # multiple lines of output means kees didnt find match
-    # and wants to say why
-    LINES=$(wc -l <<< $OUTPUT)
-    if [ "$LINES" -gt "1" ]; then
+    FIRST_LINE=$(head -n 1 <<< $OUTPUT)
+    if [[ "${FIRST_LINE,,}" =~ "matches" ]]; then
         echo "$OUTPUT"
     else
-        _kees_copy $OUTPUT
+        LAST=$(tail -n 1 <<< $OUTPUT)
+        _kees_copy $LAST
     fi
 }
