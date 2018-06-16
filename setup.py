@@ -28,7 +28,5 @@ setup(
     entry_points={'console_scripts': [
         'kees = kees.commands:run_it',
     ]},
-
-    tests_require=["nose", "mock"],
-    test_suite="nose.collector",
+    scripts=['kees.sh'],
 )
