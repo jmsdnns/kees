@@ -103,6 +103,7 @@ class KeychainItem(object):
     def __init__(self, identifier, name, path, type):
         self.identifier = identifier
         self.name = name
+        self.username = None
         self.password = None
 
         self._path = path
@@ -117,9 +118,14 @@ class KeychainItem(object):
 
         self._key_identifier = item_data.get("keyID")
         self._security_level = item_data.get("securityLevel")
-        self._encrypted_json = item_data["encrypted"]
+        if 'encrypted' in item_data:
+            self._encrypted_json = item_data["encrypted"]
 
     def _find_password(self):
+        err_msg = "Only use subclasses of KeychainItem"
+        raise NotImplementedError(err_msg)
+
+    def _find_username(self):
         err_msg = "Only use subclasses of KeychainItem"
         raise NotImplementedError(err_msg)
 
@@ -142,8 +148,10 @@ class KeychainItem(object):
         )
 
         decrypted_json = key.decrypt(self._encrypted_json)
+        decrypted_json = decrypted_json.strip(b'\x10')
         self._data = json.loads(decrypted_json)
 
+        self.username = self._find_username()
         self.password = self._find_password()
 
 
@@ -154,8 +162,16 @@ class WebFormKeychainItem(KeychainItem):
                 return field["value"]
             elif field.get("name") == "Password":
                 return field["value"]
+    def _find_username(self):
+        for field in self._data["fields"]:
+            if field.get("designation") == "username":
+                return field["value"]
+            elif field.get("name") == "Username":
+                return field["value"]
 
 
 class PasswordKeychainItem(KeychainItem):
     def _find_password(self):
         return self._data["password"]
+    def _find_username(self):
+        return self._data["username"]
